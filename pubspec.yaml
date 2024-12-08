@@ -1,15 +1,19 @@
 name: real_chat
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
   sdk: ^3.5.4
 
 dependencies:
+  cupertino_icons: ^1.0.8
   flutter:
     sdk: flutter
+  flutter_bloc: ^8.1.6
+  flutter_secure_storage: ^9.2.2
   google_fonts: ^6.2.1
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:
