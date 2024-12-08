@@ -1,8 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:real_chat/core/theme.dart';
+import 'package:real_chat/features/conversation/presentation/bloc/conversations_bloc.dart';
+import 'package:real_chat/features/conversation/presentation/bloc/conversations_event.dart';
+import 'package:real_chat/features/conversation/presentation/bloc/conversations_state.dart';
 
-class MessagePage extends StatelessWidget {
-  const MessagePage({super.key});
+class ConversationsPage extends StatefulWidget {
+  const ConversationsPage({super.key});
+
+  @override
+  State<ConversationsPage> createState() => _ConversationsPageState();
+}
+
+class _ConversationsPageState extends State<ConversationsPage> {
+  @override
+  void initState() {
+    BlocProvider.of<ConversationsBloc>(context).add(FetchConversations());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,16 +57,31 @@ class MessagePage extends StatelessWidget {
           Container(
             height: 100,
             padding: const EdgeInsets.all(5),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                _buildRecentContact("Barry", context),
-                _buildRecentContact("Perez", context),
-                _buildRecentContact("Alvin", context),
-                _buildRecentContact("Dan", context),
-                _buildRecentContact("Prank", context),
-                _buildRecentContact("Peter", context),
-              ],
+            child: BlocBuilder<ConversationsBloc, ConversationsState>(
+              builder: (context, state) {
+                if (state is ConversationsLoading) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is ConversationsLoaded) {
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: state.conversations.length,
+                    itemBuilder: (context, index) {
+                      final conversation = state.conversations[index];
+                      return _buildRecentContact(
+                          conversation.participantName, context);
+                    },
+                  );
+                } else if (state is ConversationsError) {
+                  return Center(
+                    child: Text(state.message),
+                  );
+                }
+                return Center(
+                  child: Text("Empty data"),
+                );
+              },
             ),
           ),
           const SizedBox(height: 15),
@@ -65,19 +95,33 @@ class MessagePage extends StatelessWidget {
                 ),
               ),
               padding: const EdgeInsets.only(top: 12),
-              child: ListView(
-                children: [
-                  _buildMessageTile(
-                      "Danny H", "dannyh@gmail.com", "08:35", context),
-                  _buildMessageTile(
-                      "Bobby H", "dannyh@gmail.com", "08:35", context),
-                  _buildMessageTile(
-                      "Mike H", "dannyh@gmail.com", "08:35", context),
-                  _buildMessageTile(
-                      "Fabrice H", "dannyh@gmail.com", "08:35", context),
-                  _buildMessageTile(
-                      "Fabio H", "dannyh@gmail.com", "08:35", context),
-                ],
+              child: BlocBuilder<ConversationsBloc, ConversationsState>(
+                builder: (context, state) {
+                  if (state is ConversationsLoading) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is ConversationsLoaded) {
+                    return ListView.builder(
+                      itemCount: state.conversations.length,
+                      itemBuilder: (context, index) {
+                        final conversation = state.conversations[index];
+                        return _buildMessageTile(
+                            conversation.participantName,
+                            conversation.lastMessage,
+                            conversation.lastMessageTime.toString(),
+                            context);
+                      },
+                    );
+                  } else if (state is ConversationsError) {
+                    return Center(
+                      child: Text(state.message),
+                    );
+                  }
+                  return Center(
+                    child: Text("No conversation found"),
+                  );
+                },
               ),
             ),
           )
