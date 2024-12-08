@@ -46,6 +46,12 @@ class AppTheme {
           color: Colors.white,
         ),
       ),
+      appBarTheme: AppBarTheme(
+        iconTheme: IconThemeData(
+          color: Colors.white,
+          size: 16,
+        ),
+      ),
     );
   }
 }
