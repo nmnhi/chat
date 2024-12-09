@@ -5,6 +5,7 @@ import 'package:real_chat/features/auth/data/models/user_model.dart';
 
 class AuthRemoteDataSource {
   final String baseUrl = 'http://localhost:6000/auth';
+  // final String baseUrl = 'http://10.0.2.2:6000/auth';
 
   Future<UserModel> login(
       {required String email, required String password}) async {

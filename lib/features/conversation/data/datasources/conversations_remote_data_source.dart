@@ -6,7 +6,9 @@ import 'package:real_chat/features/conversation/data/models/conversation_model.d
 
 class ConversationsRemoteDataSource {
   final String baseUrl = "http://localhost:6000";
+  // final String baseUrl = "http://10.0.2.2:6000";
   final _storage = FlutterSecureStorage();
+
   Future<List<ConversationModel>> fetchConversations() async {
     String token = await _storage.read(key: 'token') ?? '';
 
