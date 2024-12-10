@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:real_chat/core/theme.dart';
+import 'package:real_chat/features/chat/presentation/pages/chat_page.dart';
 import 'package:real_chat/features/conversation/presentation/bloc/conversations_bloc.dart';
 import 'package:real_chat/features/conversation/presentation/bloc/conversations_event.dart';
 import 'package:real_chat/features/conversation/presentation/bloc/conversations_state.dart';
@@ -106,11 +107,24 @@ class _ConversationsPageState extends State<ConversationsPage> {
                       itemCount: state.conversations.length,
                       itemBuilder: (context, index) {
                         final conversation = state.conversations[index];
-                        return _buildMessageTile(
-                            conversation.participantName,
-                            conversation.lastMessage,
-                            conversation.lastMessageTime.toString(),
-                            context);
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChatPage(
+                                  conversationId: conversation.id,
+                                  mate: conversation.participantName,
+                                ),
+                              ),
+                            );
+                          },
+                          child: _buildMessageTile(
+                              conversation.participantName,
+                              conversation.lastMessage,
+                              conversation.lastMessageTime.toString(),
+                              context),
+                        );
                       },
                     );
                   } else if (state is ConversationsError) {
