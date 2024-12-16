@@ -28,4 +28,28 @@ class ConversationsRemoteDataSource {
       throw Exception('$errorMessage');
     }
   }
+
+  Future<String> checkOrCreateConversation({required String contactId}) async {
+    String token = await _storage.read(key: 'token') ?? '';
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/conversations/check-or-create'),
+      body: jsonEncode({
+        'contactId': contactId,
+      }),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final responseBody = jsonDecode(response.body);
+      return responseBody['conversationId'] ?? '';
+    } else {
+      final responseBody = jsonDecode(response.body);
+      final errorMessage = responseBody['error'] ?? "Unknown error occurred";
+      throw Exception('$errorMessage');
+    }
+  }
 }

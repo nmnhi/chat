@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:real_chat/core/theme.dart';
 import 'package:real_chat/features/chat/presentation/pages/chat_page.dart';
+import 'package:real_chat/features/contacts/presentation/pages/contacts_page.dart';
 import 'package:real_chat/features/conversation/presentation/bloc/conversations_bloc.dart';
 import 'package:real_chat/features/conversation/presentation/bloc/conversations_event.dart';
 import 'package:real_chat/features/conversation/presentation/bloc/conversations_state.dart';
@@ -140,6 +141,18 @@ class _ConversationsPageState extends State<ConversationsPage> {
             ),
           )
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ContactsPage(),
+            ),
+          );
+        },
+        backgroundColor: DefaultColors.buttonColor,
+        child: Icon(Icons.contacts),
       ),
     );
   }

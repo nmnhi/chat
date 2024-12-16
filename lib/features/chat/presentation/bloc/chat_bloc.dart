@@ -38,6 +38,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
       emit(ChatLoadedState(List.from(_messages)));
 
+      _socketService.socket.off("newMessage");
+
       _socketService.socket.emit("joinConversation", event.conversationId);
       _socketService.socket.on(
         "newMessage",
